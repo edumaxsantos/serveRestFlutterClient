@@ -1,4 +1,4 @@
-import 'package:api_calling_test/src/features/login/login_page.dart';
+import 'package:serve_rest_flutter_client/src/features/login/login_page.dart';
 import 'package:flutter/material.dart';
 
 class MyWidget extends StatelessWidget {

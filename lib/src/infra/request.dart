@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:api_calling_test/src/infra/response.dart';
+import 'package:serve_rest_flutter_client/src/infra/response.dart';
 import 'package:http/http.dart' as http;
 
 class Request {

@@ -1,5 +1,5 @@
-import 'package:api_calling_test/src/infra/request.dart';
-import 'package:api_calling_test/src/infra/response.dart';
+import 'package:serve_rest_flutter_client/src/infra/request.dart';
+import 'package:serve_rest_flutter_client/src/infra/response.dart';
 
 class LoginService {
   Future<Response> login(

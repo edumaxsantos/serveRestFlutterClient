@@ -1,6 +1,6 @@
 {
-    "name": "api_calling_test",
-    "short_name": "api_calling_test",
+    "name": "serve_rest_flutter_client",
+    "short_name": "serve_rest_flutter_client",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

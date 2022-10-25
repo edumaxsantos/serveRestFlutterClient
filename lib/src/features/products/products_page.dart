@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import 'package:api_calling_test/src/features/products/models/products_model.dart';
-import 'package:api_calling_test/src/features/products/product_detail_page.dart';
+import 'package:serve_rest_flutter_client/src/features/products/models/products_model.dart';
+import 'package:serve_rest_flutter_client/src/features/products/product_detail_page.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 

@@ -1,4 +1,4 @@
-import 'package:api_calling_test/src/features/products/products_page.dart';
+import 'package:serve_rest_flutter_client/src/features/products/products_page.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatelessWidget {

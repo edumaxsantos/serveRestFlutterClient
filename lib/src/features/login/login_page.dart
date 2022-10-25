@@ -1,6 +1,6 @@
-import 'package:api_calling_test/src/features/home/home_page.dart';
-import 'package:api_calling_test/src/features/login/services/login_service.dart';
-import 'package:api_calling_test/src/features/login/widgets/basic_input_field_widget.dart';
+import 'package:serve_rest_flutter_client/src/features/home/home_page.dart';
+import 'package:serve_rest_flutter_client/src/features/login/services/login_service.dart';
+import 'package:serve_rest_flutter_client/src/features/login/widgets/basic_input_field_widget.dart';
 import 'package:flutter/material.dart';
 
 class LoginPage extends StatefulWidget {

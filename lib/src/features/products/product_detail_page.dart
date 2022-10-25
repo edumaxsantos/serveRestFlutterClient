@@ -1,4 +1,4 @@
-import 'package:api_calling_test/src/features/products/models/product_model.dart';
+import 'package:serve_rest_flutter_client/src/features/products/models/product_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
