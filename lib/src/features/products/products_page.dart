@@ -1,25 +1,11 @@
-import 'dart:convert';
-
 import 'package:serve_rest_flutter_client/src/features/products/models/products_model.dart';
 import 'package:serve_rest_flutter_client/src/features/products/product_detail_page.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-
-Future<ProductsModel> fetchProducts() async {
-  final response = await http.get(Uri.parse('https://serverest.dev/produtos'));
-
-  if (response.statusCode == 200) {
-    debugPrint('got status 200');
-    final products = ProductsModel.fromJson(jsonDecode(response.body));
-    debugPrint('Quantidade ${products.quantidade}');
-    return products;
-  } else {
-    throw Exception('Failed to load products');
-  }
-}
+import 'package:serve_rest_flutter_client/src/features/products/services/products_service.dart';
 
 class ProductsPage extends StatefulWidget {
-  const ProductsPage({super.key});
+  final service = ProductsService();
+  ProductsPage({super.key});
 
   @override
   State<ProductsPage> createState() => _ProductsPageState();
@@ -31,7 +17,7 @@ class _ProductsPageState extends State<ProductsPage> {
   @override
   void initState() {
     super.initState();
-    products = fetchProducts();
+    products = widget.service.fetchProducts();
   }
 
   @override
@@ -43,7 +29,7 @@ class _ProductsPageState extends State<ProductsPage> {
           IconButton(
               onPressed: () {
                 setState(() {
-                  products = fetchProducts();
+                  products = widget.service.fetchProducts();
                 });
               },
               icon: const Icon(Icons.refresh))
@@ -71,8 +57,8 @@ class _ProductsPageState extends State<ProductsPage> {
                       itemBuilder: (context, index) {
                         final produto = snapshot.data!.produtos[index];
                         return ListTile(
+                          key: Key(produto.id),
                           title: Text(produto.nome),
-                          leading: Text(produto.id),
                           onTap: () {
                             Navigator.of(context).push(MaterialPageRoute(
                               builder: (context) =>

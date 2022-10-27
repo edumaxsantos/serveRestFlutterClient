@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 class HomePage extends StatelessWidget {
   HomePage({super.key});
 
-  final Map<String, Widget> routes = {'Produtos': const ProductsPage()};
+  final Map<String, Widget> routes = {'Produtos': ProductsPage()};
 
   @override
   Widget build(BuildContext context) {
