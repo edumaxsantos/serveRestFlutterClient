@@ -1,6 +1,8 @@
+import 'package:provider/provider.dart';
 import 'package:serve_rest_flutter_client/src/features/home/home_page.dart';
+import 'package:serve_rest_flutter_client/src/features/login/models/token_model.dart';
 import 'package:serve_rest_flutter_client/src/features/login/services/login_service.dart';
-import 'package:serve_rest_flutter_client/src/features/login/widgets/basic_input_field_widget.dart';
+import 'package:serve_rest_flutter_client/src/shared/widgets/basic_input_field_widget.dart';
 import 'package:flutter/material.dart';
 
 class LoginPage extends StatefulWidget {
@@ -15,16 +17,6 @@ class _LoginPageState extends State<LoginPage> {
 
   String _email = '';
   String _password = '';
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
 
   _navigate() {
     Navigator.of(context)
@@ -48,6 +40,8 @@ class _LoginPageState extends State<LoginPage> {
         await LoginService().login(email: _email, password: _password);
 
     if (response.statusCode == 200) {
+      Provider.of<TokenModelNotifier>(context, listen: false)
+          .updateToken(response.body!['authorization']);
       _navigate();
     } else {
       _showSnackbar(
