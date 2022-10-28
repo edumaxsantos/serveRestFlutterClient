@@ -1,8 +1,14 @@
+import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:provider/provider.dart';
+import 'package:serve_rest_flutter_client/src/features/login/models/token_model.dart';
 import 'package:serve_rest_flutter_client/src/features/products/create_product_page.dart';
+import 'package:serve_rest_flutter_client/src/features/products/edit_product_page.dart';
+import 'package:serve_rest_flutter_client/src/features/products/models/product_model.dart';
 import 'package:serve_rest_flutter_client/src/features/products/models/products_model.dart';
 import 'package:serve_rest_flutter_client/src/features/products/product_detail_page.dart';
 import 'package:flutter/material.dart';
 import 'package:serve_rest_flutter_client/src/features/products/services/products_service.dart';
+import 'package:serve_rest_flutter_client/src/shared/widgets/show_snackbar.dart';
 
 class ProductsPage extends StatefulWidget {
   final service = ProductsService();
@@ -35,17 +41,13 @@ class _ProductsPageState extends State<ProductsPage> {
                       builder: ((context) => const CreateProductPage()),
                     ),
                   )
-                  .then((value) => setState(() {
-                        products = widget.service.fetchProducts();
-                      }));
+                  .then((value) => _updateProducts());
             },
             icon: const Icon(Icons.add),
           ),
           IconButton(
             onPressed: () {
-              setState(() {
-                products = widget.service.fetchProducts();
-              });
+              _updateProducts();
             },
             icon: const Icon(Icons.refresh),
           ),
@@ -65,23 +67,13 @@ class _ProductsPageState extends State<ProductsPage> {
                   if (snapshot.hasError) {
                     return Text('${snapshot.error}');
                   }
-
-                  debugPrint('${snapshot.data!.quantidade}');
+                  final data = snapshot.data!;
                   return Expanded(
                     child: ListView.builder(
-                      itemCount: snapshot.data!.quantidade,
+                      itemCount: data.quantidade,
                       itemBuilder: (context, index) {
-                        final produto = snapshot.data!.produtos[index];
-                        return ListTile(
-                          key: Key(produto.id!),
-                          title: Text(produto.nome),
-                          onTap: () {
-                            Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) =>
-                                  ProductDetailPage(product: produto),
-                            ));
-                          },
-                        );
+                        final produto = data.produtos[index];
+                        return _listViewBuilder(context, produto);
                       },
                     ),
                   );
@@ -92,5 +84,94 @@ class _ProductsPageState extends State<ProductsPage> {
         ),
       ),
     );
+  }
+
+  _listViewBuilder(context, ProductModel produto) {
+    return Slidable(
+      startActionPane: ActionPane(
+        motion: const ScrollMotion(),
+        children: [
+          Consumer<TokenModelNotifier>(
+            builder: (context, value, child) {
+              return SlidableAction(
+                onPressed: (context) =>
+                    _showDeleteDialog(produto: produto, token: value.token),
+                icon: Icons.delete,
+                label: 'Apagar',
+                autoClose: true,
+                foregroundColor: Colors.white,
+                backgroundColor: Colors.red,
+              );
+            },
+          ),
+          SlidableAction(
+            onPressed: (context) {
+              Navigator.of(context)
+                  .push(MaterialPageRoute(
+                      builder: ((context) => EditProductPage(
+                            product: produto,
+                          ))))
+                  .then((value) => _updateProducts());
+            },
+            icon: Icons.edit,
+            label: 'Editar',
+            autoClose: true,
+            foregroundColor: Colors.white,
+            backgroundColor: Colors.blue,
+          ),
+        ],
+      ),
+      child: ListTile(
+        key: Key(produto.id!),
+        title: Text(produto.nome),
+        onTap: () {
+          Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => ProductDetailPage(product: produto),
+          ));
+        },
+      ),
+    );
+  }
+
+  _showDeleteDialog({required ProductModel produto, required String token}) {
+    return showDialog(
+      context: context,
+      builder: ((context) {
+        return AlertDialog(
+          title: const Text('Deseja continuar?'),
+          content:
+              Text('Está prestes a apagar ${produto.nome}. Está certo disso?'),
+          actions: [
+            TextButton(
+                onPressed: () => Navigator.of(context).pop('Cancelar'),
+                child: const Text('Cancelar')),
+            TextButton(
+              onPressed: () async {
+                Navigator.of(context).pop('Apagar');
+                final response = await widget.service
+                    .deleteProduct(product: produto, token: token);
+                if (mounted) {
+                  if (response.statusCode == 200) {
+                    showSnackbar(
+                        context, response.body!['message'], Colors.green);
+                    _updateProducts();
+                  } else {
+                    showSnackbar(
+                        context, response.body!['message'], Colors.red);
+                  }
+                }
+              },
+              child: const Text('Apagar'),
+            ),
+          ],
+        );
+      }),
+    );
+  }
+
+  _updateProducts() {
+    setState(() {
+      products = widget.service.fetchProducts();
+    });
   }
 }
