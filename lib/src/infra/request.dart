@@ -14,8 +14,20 @@ class Request {
     );
   }
 
-  Future<Response> post({required String path, dynamic body}) async {
-    var response = await http.post(Uri.parse('$_basicUrl/$path'), body: body);
+  Future<Response> post({
+    required String path,
+    dynamic body,
+    Map<String, String> headers = const {},
+  }) async {
+    final nHeaders = {...headers};
+    nHeaders.putIfAbsent('Content-Type', () => 'application/json');
+    dynamic response;
+    try {
+      response = await http.post(Uri.parse('$_basicUrl/$path'),
+          body: jsonEncode(body), headers: nHeaders);
+    } catch (e) {
+      return Response(statusCode: 500, body: {'message': '$e'});
+    }
     return Response(
       statusCode: response.statusCode,
       body: jsonDecode(response.body),
