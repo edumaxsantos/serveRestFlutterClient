@@ -19,12 +19,13 @@ class ProductModel {
       preco: json['preco'],
       descricao: json['descricao'],
       quantidade: json['quantidade'],
-      id: json['_id'],
+      id: json['_id'] ?? json['id'],
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
+      'id': id,
       'nome': nome,
       'preco': preco,
       'descricao': descricao,
