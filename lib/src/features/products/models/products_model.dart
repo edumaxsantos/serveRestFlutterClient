@@ -15,7 +15,6 @@ class ProductsModel {
         .map<ProductModel>(
             (Map<String, dynamic> product) => ProductModel.fromJson(product))
         .toList();
-    formatted.sort((a, b) => a.nome.compareTo(b.nome));
     return ProductsModel(
       quantidade: json['quantidade'],
       produtos: formatted,
