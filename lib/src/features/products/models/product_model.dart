@@ -3,7 +3,7 @@ class ProductModel {
   final int preco;
   final String descricao;
   final int quantidade;
-  final String id;
+  final String? id;
 
   ProductModel({
     required this.nome,
@@ -21,5 +21,14 @@ class ProductModel {
       quantidade: json['quantidade'],
       id: json['_id'],
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'nome': nome,
+      'preco': preco,
+      'descricao': descricao,
+      'quantidade': quantidade,
+    };
   }
 }
