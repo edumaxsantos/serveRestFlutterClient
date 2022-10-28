@@ -1,3 +1,4 @@
+import 'package:serve_rest_flutter_client/src/features/products/create_product_page.dart';
 import 'package:serve_rest_flutter_client/src/features/products/models/products_model.dart';
 import 'package:serve_rest_flutter_client/src/features/products/product_detail_page.dart';
 import 'package:flutter/material.dart';
@@ -27,12 +28,27 @@ class _ProductsPageState extends State<ProductsPage> {
         title: const Text('Products'),
         actions: [
           IconButton(
-              onPressed: () {
-                setState(() {
-                  products = widget.service.fetchProducts();
-                });
-              },
-              icon: const Icon(Icons.refresh))
+            onPressed: () {
+              Navigator.of(context)
+                  .push(
+                    MaterialPageRoute(
+                      builder: ((context) => const CreateProductPage()),
+                    ),
+                  )
+                  .then((value) => setState(() {
+                        products = widget.service.fetchProducts();
+                      }));
+            },
+            icon: const Icon(Icons.add),
+          ),
+          IconButton(
+            onPressed: () {
+              setState(() {
+                products = widget.service.fetchProducts();
+              });
+            },
+            icon: const Icon(Icons.refresh),
+          ),
         ],
       ),
       body: SafeArea(
@@ -43,7 +59,7 @@ class _ProductsPageState extends State<ProductsPage> {
                 future: products,
                 builder: (context, snapshot) {
                   if (!snapshot.hasData) {
-                    return Text('no data');
+                    return const Text('no data');
                   }
 
                   if (snapshot.hasError) {
@@ -57,7 +73,7 @@ class _ProductsPageState extends State<ProductsPage> {
                       itemBuilder: (context, index) {
                         final produto = snapshot.data!.produtos[index];
                         return ListTile(
-                          key: Key(produto.id),
+                          key: Key(produto.id!),
                           title: Text(produto.nome),
                           onTap: () {
                             Navigator.of(context).push(MaterialPageRoute(
